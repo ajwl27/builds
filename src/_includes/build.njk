@@ -1,0 +1,72 @@
+---
+layout: base.njk
+---
+{% set no = collections.builds | catNo(page.url) %}
+<article class="build">
+  <a class="back" href="/">← All builds</a>
+
+  <header class="build-head">
+    <p class="meta">
+      {% if no %}<span>{{ no }}</span>{% endif %}
+      <time datetime="{{ page.date | isoDate }}">{{ page.date | monthYear }}</time>
+      {% if status %}<span class="status{% if status == 'In progress' %} wip{% endif %}">{{ status }}</span>{% endif %}
+      {% if draft %}<span class="status draft">Draft</span>{% endif %}
+    </p>
+    <h1>{{ title }}</h1>
+    {% if summary %}<p class="lead">{{ summary }}</p>{% endif %}
+    {% if tags and tags.length %}<p class="tags">{% for t in tags %}<span>{{ t }}</span>{% endfor %}</p>{% endif %}
+  </header>
+
+  <figure class="hero{% if not cover %} empty{% endif %}">
+    {% if cover %}
+      {% if cover | isVideo %}
+        <video src="{{ cover }}" controls muted loop playsinline preload="metadata"></video>
+      {% else %}
+        <img src="{{ cover }}" alt="{{ title }}" sizes="(min-width: 1100px) 1040px, 100vw" loading="eager" fetchpriority="high">
+      {% endif %}
+    {% else %}
+      <span>Photo to come</span>
+    {% endif %}
+  </figure>
+
+  <div class="build-body">
+    {% if specs and specs.length %}
+    <dl class="specs">
+      {% for s in specs %}<div><dt>{{ s.label }}</dt><dd>{{ s.value }}</dd></div>{% endfor %}
+    </dl>
+    {% endif %}
+
+    {% if content | trim %}
+    <div class="notes">{{ content | safe }}</div>
+    {% endif %}
+  </div>
+
+  {% if gallery and gallery.length %}
+  <section class="gallery" aria-label="Photos and clips">
+    {% for m in gallery %}
+      <figure>
+        {% if m | isVideo %}
+          <video src="{{ m }}" controls muted loop playsinline preload="metadata"></video>
+        {% else %}
+          <a href="{{ m }}"><img src="{{ m }}" alt="{{ title }}, photo {{ loop.index }}" sizes="(min-width: 900px) 50vw, 100vw"></a>
+        {% endif %}
+      </figure>
+    {% endfor %}
+  </section>
+  {% endif %}
+
+  {% if links and links.length %}
+  <ul class="build-links">
+    {% for l in links %}<li><a href="{{ l.url }}" target="_blank" rel="noopener">{{ l.label }} ↗</a></li>{% endfor %}
+  </ul>
+  {% endif %}
+
+  {% set newer = collections.builds | neighbour(page.url, -1) %}
+  {% set older = collections.builds | neighbour(page.url, 1) %}
+  {% if newer or older %}
+  <nav class="pager" aria-label="More builds">
+    {% if older %}<a href="{{ older.url }}"><small>Older</small>{{ older.data.title }}</a>{% else %}<span></span>{% endif %}
+    {% if newer %}<a class="next" href="{{ newer.url }}"><small>Newer</small>{{ newer.data.title }}</a>{% endif %}
+  </nav>
+  {% endif %}
+</article>

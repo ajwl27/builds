@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% if title %}{{ title }} · {% endif %}{{ site.title }}</title>
+  <meta name="description" content="{{ summary or site.tagline }}">
+  <meta name="color-scheme" content="light dark">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@112,500;112,700;125,800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="/assets/site.css">
+  <meta property="og:title" content="{{ title or site.title }}">
+</head>
+<body>
+  <div class="wrap">
+    <header class="masthead">
+      <a class="name" href="/">{{ site.title }}</a>
+      <p class="tagline">{{ site.tagline }}</p>
+      {% if site.links and site.links.length %}
+      <nav class="links" aria-label="Elsewhere">
+        {% for l in site.links %}<a href="{{ l.url }}" rel="me noopener" target="_blank">{{ l.label }} ↗</a>{% endfor %}
+      </nav>
+      {% endif %}
+    </header>
+    {% if preview %}<p class="preview-flag">Preview: drafts are visible</p>{% endif %}
+    <main>
+      {{ content | safe }}
+    </main>
+    <footer class="foot">
+      <span>{{ collections.builds.length }} builds catalogued</span>
+      <span>Updated {{ (collections.builds[0].date if collections.builds.length else page.date) | monthYear }}</span>
+    </footer>
+  </div>
+  <script>
+    // Tag filter on the index: click a tag to show only those builds.
+    (function () {
+      var bar = document.querySelector("[data-filter]");
+      if (!bar) return;
+      var cards = Array.prototype.slice.call(document.querySelectorAll("[data-tags]"));
+      bar.addEventListener("click", function (e) {
+        var b = e.target.closest("button");
+        if (!b) return;
+        var tag = b.getAttribute("data-tag");
+        Array.prototype.forEach.call(bar.querySelectorAll("button"), function (x) {
+          x.setAttribute("aria-pressed", String(x === b));
+        });
+        cards.forEach(function (c) {
+          c.hidden = tag !== "*" && c.getAttribute("data-tags").split("|").indexOf(tag) < 0;
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

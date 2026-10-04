@@ -1,0 +1,46 @@
+---
+layout: base.njk
+---
+<section class="intro">
+  <p class="about">{{ site.about }}</p>
+  <p class="catalogue">Catalogue of builds · {{ collections.builds.length }} {{ "entry" if collections.builds.length == 1 else "entries" }}</p>
+</section>
+
+{% set tags = collections.builds | allTags %}
+{% if tags.length %}
+<div class="filter" data-filter role="group" aria-label="Filter by tag">
+  <button type="button" data-tag="*" aria-pressed="true">All</button>
+  {% for t in tags %}<button type="button" data-tag="{{ t }}" aria-pressed="false">{{ t }}</button>{% endfor %}
+</div>
+{% endif %}
+
+<ol class="grid" reversed>
+{% for b in collections.builds %}
+  <li class="card" data-tags="{{ (b.data.tags or []) | join('|') }}">
+    <a href="{{ b.url }}">
+      <figure class="cover{% if not b.data.cover %} empty{% endif %}">
+        {% if b.data.cover and (b.data.cover | isVideo) %}
+          <video src="{{ b.data.cover }}" muted playsinline preload="metadata"></video>
+        {% elif b.data.cover %}
+          <img src="{{ b.data.cover }}" alt="{{ b.data.title }}" sizes="(min-width: 1000px) 33vw, (min-width: 640px) 50vw, 100vw">
+        {% else %}
+          <span>Photo to come</span>
+        {% endif %}
+      </figure>
+      <div class="label">
+        <p class="meta">
+          <span>{{ collections.builds | catNo(b.url) }}</span>
+          <span>{{ b.date | monthYear }}</span>
+          {% if b.data.status %}<span class="status{% if b.data.status == 'In progress' %} wip{% endif %}">{{ b.data.status }}</span>{% endif %}
+          {% if b.data.draft %}<span class="status draft">Draft</span>{% endif %}
+        </p>
+        <h2>{{ b.data.title }}</h2>
+        {% if b.data.summary %}<p class="summary">{{ b.data.summary }}</p>{% endif %}
+        {% if b.data.tags and b.data.tags.length %}<p class="tags">{% for t in b.data.tags %}<span>{{ t }}</span>{% endfor %}</p>{% endif %}
+      </div>
+    </a>
+  </li>
+{% else %}
+  <li class="none">Nothing here yet. Add a build in Pages CMS and untick "Draft".</li>
+{% endfor %}
+</ol>

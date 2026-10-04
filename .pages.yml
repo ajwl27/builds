@@ -1,0 +1,115 @@
+# Pages CMS configuration: https://pagescms.org/docs/configuration/
+media:
+  input: src/media
+  output: /media
+  rename: safe
+  categories: [image, video]
+
+content:
+  - name: builds
+    label: Builds
+    type: collection
+    path: src/builds
+    filename: "{primary}.md"
+    exclude: [builds.11tydata.js]
+    view:
+      fields: [title, status, date, draft]
+      primary: title
+      sort: [date, title]
+      default:
+        sort: date
+        order: desc
+    fields:
+      - name: title
+        label: Title
+        type: string
+        required: true
+      - name: summary
+        label: One-liner
+        description: What it is, in one line. Shown on the card and under the title.
+        type: string
+      - name: date
+        label: Date
+        type: date
+      - name: status
+        label: Status
+        type: select
+        options:
+          values: [In progress, Finished]
+      - name: cover
+        label: Cover photo
+        description: The main picture. A short MP4 works too.
+        type: file
+        options:
+          categories: [image, video]
+      - name: gallery
+        label: Photos and clips
+        description: Drop in as many as you like. JPG, PNG or short MP4 (under 100 MB each).
+        type: file
+        options:
+          multiple: true
+          categories: [image, video]
+      - name: tags
+        label: Tags
+        type: string
+        list: true
+      - name: specs
+        label: Specs
+        description: Short label and value pairs, like "Board" and "ESP32-S3".
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{label}: {value}"
+        fields:
+          - name: label
+            type: string
+          - name: value
+            type: string
+      - name: links
+        label: Links
+        description: Code, a video, a write-up elsewhere.
+        type: object
+        list: true
+        fields:
+          - name: label
+            type: string
+          - name: url
+            type: string
+      - name: draft
+        label: Draft (hidden from the live site)
+        type: boolean
+      - name: body
+        label: Notes (optional)
+        type: rich-text
+        options:
+          format: markdown
+
+  - name: site
+    label: Site settings
+    type: file
+    path: src/_data/site.json
+    format: json
+    fields:
+      - name: title
+        label: Name
+        type: string
+      - name: tagline
+        label: Tagline
+        type: string
+      - name: about
+        label: About
+        type: text
+      - name: links
+        label: Links
+        type: object
+        list: true
+        fields:
+          - name: label
+            type: string
+          - name: url
+            type: string
+
+settings:
+  commit:
+    identity: user

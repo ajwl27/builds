@@ -1,0 +1,19 @@
+{
+  "name": "builds",
+  "version": "1.0.0",
+  "description": "A small site of my builds, edited with Pages CMS and published with GitHub Pages.",
+  "scripts": {
+    "build": "eleventy",
+    "start": "eleventy --serve",
+    "preview": "PREVIEW=1 eleventy --serve"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^3.1.6",
+    "@11ty/eleventy-img": "^6.0.4"
+  },
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  }
+}
