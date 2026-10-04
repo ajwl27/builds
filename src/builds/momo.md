@@ -1,5 +1,5 @@
 ---
-title: momo
+title: momo - home server
 summary: A Dell Wyse 5070 thin client turned into an always-on home server.
 date: 2026-10-03
 status: In progress
@@ -17,7 +17,7 @@ specs:
     value: Debian 13, headless
   - label: Services
     value: Samba file share, Docker, Home Assistant, Claude Code via Remote Control
-draft: true
+draft: false
 ---
 Second hand budget homelab, now running Debian 13 headless. Shares files with my PC and phone, runs Home Assistant in Docker, and hosts a persistent Claude Code session I can reach from anywhere.
 
